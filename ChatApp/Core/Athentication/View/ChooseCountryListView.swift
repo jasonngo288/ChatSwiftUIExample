@@ -1,5 +1,5 @@
 //
-//  ChooseCountryListScreen.swift
+//  ChooseCountryListView.swift
 //  ChatApp
 //
 //  Created by Jason Ngo on 21/05/2024.
@@ -7,12 +7,17 @@
 
 import SwiftUI
 
-struct ChooseCountryListScreen: View {
-    @Environment(\.presentationMode) var presentationMode
+struct ChooseCountryListView: View {
+    @Environment(\.dismiss) var dismiss
     @StateObject var viewModel = ChooseCountryListViewModel()
-    var onDismiss: ((_ model: Country) -> Void)?
+    var onDone:((Country)->Void)
+    
     var body: some View {
-        NavigationView {
+        NavigationStack {
+            if viewModel.countryList.isEmpty {
+                Text("No records")
+                    .listRowBackground(EmptyView())
+            }
             List(viewModel.countryList) { country in
                 if country.name.isEmpty {
                     Text("no country name")
@@ -22,19 +27,20 @@ struct ChooseCountryListScreen: View {
                         Spacer()
                         Text(country.dia).font(.subheadline)
                     }.onTapGesture(perform: {
-                        onDismiss?(country)
-                        presentationMode.wrappedValue.dismiss()
+                        self.onDone(country)
+                        self.dismiss()
                     })
                 }
             }
-        }
-        .navigationTitle(Text("Choose your country"))
-        .onAppear {
-            viewModel.loadData()
+            .searchable(text: $viewModel.searchTerm)
+            .navigationTitle(Text("Choose your country"))
+            .onAppear {
+                viewModel.loadData()
+            }
         }
     }
 }
 
 #Preview {
-    ChooseCountryListScreen()
+    ChooseCountryListView { _ in }
 }

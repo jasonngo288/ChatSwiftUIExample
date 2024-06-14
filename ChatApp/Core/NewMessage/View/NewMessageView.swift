@@ -10,12 +10,15 @@ import SwiftUI
 import Kingfisher
 
 struct NewMessageView: View {
+    
     @State private var searchText = ""
-    @Environment(\.dismiss) private var dismiss
-    @Binding var selectedUser: User?
     @StateObject private var viewModel = NewMessageViewModel()
+    @Environment(\.dismiss) private var dismiss
+    
+    var onSelectedUser: (User)->Void
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack{
             ScrollView {
                 VStack(alignment: .leading,spacing: 24) {
                     HStack(spacing: 16) {
@@ -78,8 +81,8 @@ struct NewMessageView: View {
                     }
                     .padding(.bottom,20)
                     .onTapGesture {
-                        selectedUser = user
                         dismiss()
+                        onSelectedUser(user)
                     }
                 }
             }
@@ -91,32 +94,33 @@ struct NewMessageView: View {
                         dismiss()
                     } label: {
                         HStack(spacing: 16) {
-                            Image(systemName: "arrow.backward")
+                            Image(systemName: "chevron.backward")
                             VStack(alignment: .leading) {
                                 Text("Select contact")
                                     .font(.subheadline)
                                 Text("\(viewModel.users.count) contacts")
                                     .font(.caption2)
-                            }
-                        }
-                        .foregroundStyle(.white)
+                            }.foregroundStyle(.black)
+                        }.foregroundStyle(.blue)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack(spacing: 24) {
-                      Image(systemName: "magnifyingglass")
-                      Image(systemName: "ellipsis")
+                        Image(systemName: "magnifyingglass")
+                        Image(systemName: "ellipsis")
                     }
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.blue)
                 }
-        }
+            }
         }
     }
 }
 
 
 #Preview {
-    NewMessageView(selectedUser: .constant(User.MOCK_USER))
+    NewMessageView{ _ in
+        
+    }
 }

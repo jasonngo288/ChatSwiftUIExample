@@ -62,6 +62,10 @@ struct OTPTextField: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 isFocused = true
             }
+            UITextField.appearance().clearButtonMode = .never
+        }
+        .onDisappear {
+            UITextField.appearance().clearButtonMode = .whileEditing
         }
     }
     

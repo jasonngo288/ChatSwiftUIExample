@@ -1,5 +1,5 @@
 //
-//  RegistrationScreen.swift
+//  RegistrationView.swift
 //  ChatApp
 //
 //  Created by Jason Ngo on 20/05/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct VerificationScreen: View {
+struct VerificationView: View {
     var verificationID: String = ""
     var phoneNumber: String = ""
     
@@ -60,5 +60,5 @@ struct VerificationScreen: View {
 }
 
 #Preview {
-    VerificationScreen()
+    VerificationView()
 }

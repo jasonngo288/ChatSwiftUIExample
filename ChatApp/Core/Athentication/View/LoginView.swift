@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct LoginScreen: View {
+struct LoginView: View {
     @StateObject private var viewModel = LoginViewModel()
+    @State var isGoToChooseContry: Bool = false
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -18,10 +20,8 @@ struct LoginScreen: View {
                     .foregroundColor(.gray)
                     .padding()
                 VStack {
-                    NavigationLink {
-                        ChooseCountryListScreen { model in
-                            viewModel.setCountry(selected:model)
-                        }
+                    Button {
+                        self.isGoToChooseContry.toggle()
                     } label: {
                         HStack {
                             Text(viewModel.country.name)
@@ -70,8 +70,13 @@ struct LoginScreen: View {
         .alert(isPresented: $viewModel.error) {
             Alert(title: Text("Error"), message: Text(viewModel.errorMsg))
         }
+        .sheet(isPresented: $isGoToChooseContry, content: {
+            ChooseCountryListView { model in
+                viewModel.setCountry(selected:model)
+            }
+        })
         .navigationDestination(isPresented: $viewModel.goToVerify) {
-            VerificationScreen(
+            VerificationView(
                 verificationID: viewModel.verificationID,
                 phoneNumber: viewModel.country.dia + viewModel.phoneNumber
             )
@@ -80,5 +85,5 @@ struct LoginScreen: View {
 }
 
 #Preview {
-    LoginScreen()
+    LoginView()
 }

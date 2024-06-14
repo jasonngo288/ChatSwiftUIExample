@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import FirebaseFirestore
 import FirebaseFirestoreSwift
 
 struct CookingRecipe: Codable,Identifiable,Hashable {
@@ -17,9 +18,10 @@ struct CookingRecipe: Codable,Identifiable,Hashable {
     let photoUrl: String
     let ingredients: [String]
     let instructions: [String]
+    let timestamp: Timestamp?
+    var refUrl: String? = nil
 }
 
 extension CookingRecipe {
-    
-    static let MOKUP = CookingRecipe(title: "", photoUrl: "", ingredients: [], instructions: [])
+    static let MOKUP = CookingRecipe(title: "", photoUrl: "", ingredients: [], instructions: [], timestamp: Timestamp())
 }

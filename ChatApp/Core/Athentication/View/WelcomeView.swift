@@ -1,5 +1,5 @@
 //
-//  WelcomeScreen.swift
+//  WelcomeView.swift
 //  ChatApp
 //
 //  Created by Jason Ngo on 20/05/2024.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WelcomeScreen: View {
+struct WelcomeView: View {
     
     private let mainScreenBounds: CGRect = UIScreen.main.bounds
     var body: some View {
@@ -29,7 +29,7 @@ struct WelcomeScreen: View {
                         .padding(.top, 10)
                     //Text("[Privacy Policy](https://example.com)")
                     NavigationLink {
-                        LoginScreen().navigationBarBackButtonHidden()
+                        LoginView().navigationBarBackButtonHidden()
                     } label: {
                         Text("Agree & continue")
                             .foregroundColor(.blue)
@@ -78,5 +78,5 @@ struct WelcomeScreen: View {
 }
 
 #Preview {
-    WelcomeScreen()
+    WelcomeView()
 }

@@ -20,8 +20,8 @@ class ProfileUpdateInfoViewModel: ObservableObject {
     @Published var currentUser: User?
     @Published private(set) var imageState: ImageState = .empty
     @Published var imageSelected: UIImage? = nil
-    @Published var showLoading: Bool = false
     @Published var isGoNextScreen: Bool = false
+    @Published var state = FetchState.start
     
     init(){
         currentUser = UserService.shared.currentUser
@@ -31,18 +31,18 @@ class ProfileUpdateInfoViewModel: ObservableObject {
     }
     
     func saveInfoUser() {
-        self.loading()
+        self.setFetchState(.isLoading)
         func goAhead() {
             Task {
                 do{
                     try await self.sendUserInfo()
-                    self.loading()
+                    self.setFetchState(.loadedAll)
                     DispatchQueue.main.async {
                         self.isGoNextScreen.toggle()
                     }
                 }catch {
                     print("Error \(error.localizedDescription)")
-                    self.loading()
+                    self.setFetchState(.error("Could not load: \(error.localizedDescription)"))
                 }
             }
         }
@@ -55,9 +55,9 @@ class ProfileUpdateInfoViewModel: ObservableObject {
         }
     }
     
-    private func loading() {
+    private func setFetchState(_ state: FetchState) {
         DispatchQueue.main.async {
-            self.showLoading.toggle()
+            self.state = state
         }
     }
     

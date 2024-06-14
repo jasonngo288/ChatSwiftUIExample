@@ -25,31 +25,11 @@ struct InboxRowView: View {
                 Text(message.user?.fullName ?? "")
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                if let isImage = message.isImage, isImage {
-                    Text("Sent picture")
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-                        .lineLimit(2)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
-                } else if let isVideo = message.isVideo, isVideo {
-                    Text("Sent video")
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-                        .lineLimit(2)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
-                } else if let isAudio = message.isAudio, isAudio {
-                    Text("Sent voice message")
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-                        .lineLimit(2)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
-                } else {
-                    Text(message.messageText)
-                        .font(.subheadline)
-                        .foregroundStyle(.gray)
-                        .lineLimit(2)
-                        .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
-                }
+                Text(getMessageText())
+                    .font(.subheadline)
+                    .foregroundStyle(.gray)
+                    .lineLimit(2)
+                    .frame(maxWidth: UIScreen.main.bounds.width - 100, alignment: .leading)
             }
             HStack {
                 Text(message.timestampString)
@@ -59,6 +39,18 @@ struct InboxRowView: View {
             .foregroundStyle(.gray)
         }
         .frame(height: 72)
+    }
+    
+    private func getMessageText() -> String{
+        if let isImage = message.isImage, isImage {
+            return "Sent picture"
+        } else if let isVideo = message.isVideo, isVideo {
+            return "Sent video"
+        } else if let isAudio = message.isAudio, isAudio {
+            return "Sent voice message"
+        } else {
+            return message.messageText
+        }
     }
 }
 

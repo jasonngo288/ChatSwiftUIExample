@@ -106,7 +106,7 @@ extension NSMutableAttributedString {
         } catch {
             print(error.localizedDescription)
         }
-        return AttributedString()
+        return AttributedString(self)
     }
     
     func appendText(_ text: String) -> NSMutableAttributedString {

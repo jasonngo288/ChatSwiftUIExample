@@ -13,15 +13,17 @@ struct RootView: View {
     var body: some View {
         Group {
             if viewModel.userSession != nil {
-                MainTabbarScreen()
+                MainTabbarView()
             } else {
-                WelcomeScreen()
+                WelcomeView()
             }
         }
         .fullScreenCover(isPresented: $viewModel.isGoToUpdateProfile, onDismiss: {
             viewModel.checkLogic()
         }, content: {
-            ProfileUpdateInfoScreen()
+            NavigationView{
+                ProfileUpdateInfoView()
+            }
         })
         
     }

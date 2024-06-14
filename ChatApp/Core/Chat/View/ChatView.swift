@@ -17,6 +17,8 @@ struct ChatView: View {
     @State private var showPhotoPicker: Bool = false
     @State private var showVideoPicker: Bool = false
     
+    @EnvironmentObject var router: BaseRouter
+    
     init(user: User) {
         self.user = user
         self._viewModel = StateObject(wrappedValue: ChatViewModel(user: user))
@@ -30,7 +32,6 @@ struct ChatView: View {
         }()
     
     var body: some View {
-//        NavigationStack{
             VStack {
                 ScrollView {
                     ScrollViewReader { proxy in
@@ -131,12 +132,6 @@ struct ChatView: View {
             .toolbar{
                 ToolbarItem(placement: .topBarLeading) {
                     HStack {
-                        Button(action: {
-                            tabBarVisibility = .visible
-                            dismiss()
-                        }, label: {
-                            Image(systemName: "arrow.backward")
-                        })
                         ZStack {
                             CircularProfileImageView(imageId: user.profileImageUrl, size: ProfileImageSize.xxSmall)
                         }
@@ -165,7 +160,6 @@ struct ChatView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
-    //}
 }
 
 #Preview {

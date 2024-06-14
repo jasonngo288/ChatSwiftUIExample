@@ -11,12 +11,14 @@ struct ProfileView: View {
 
     var user: User? = UserService.shared.currentUser
 
+    @EnvironmentObject var router: BaseRouter
+    
     var body: some View {
         NavigationView {
             VStack{
                 Spacer()
                 NavigationLink {
-                    ProfileUpdateInfoScreen()
+                    ProfileUpdateInfoView()
                 } label: {
                     Text("Edit Profile")
                 }

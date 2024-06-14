@@ -8,102 +8,68 @@
 import SwiftUI
 
 struct InboxView: View {
-    @State private var showNewMessageView = false
+    
     @StateObject private var viewModel = InboxViewModel()
-    @State private var selectedUser: User?
-    @State private var showChat = false
-    @State private var showUpdateProfileInfo = false
+    
+    // from root view
+    @EnvironmentObject private var router: BaseRouter
+    
+    @State private var isPresentNewMessage = false
+
     private var user: User? {
         return viewModel.currentUser
     }
+    
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottomTrailing) {
-                List {
-                        ForEach(viewModel.latestMessages) { message in
-                            ZStack {
-                                NavigationLink(value: message) {
-                                   EmptyView()
-                                }
-                                .opacity(0)
-                                InboxRowView(message: message)
-                            }
-                        
+        ZStack(alignment: .bottomTrailing) {
+            List {
+                ForEach(viewModel.latestMessages) { message in
+                    Button{
+                        if let user = message.user {
+                            router.navigateTo(InboxRouter.Route.chat(user))
                         }
+                    } label: {
+                        InboxRowView(message: message)
                     }
-                .listStyle(PlainListStyle())
-                .onChange(of: selectedUser, perform: { newValue in
-                    showChat = newValue != nil
-                })
-                .navigationDestination(for: Message.self, destination: { message in
-                    if let user = message.user {
-                        ChatView(user: user)
-                            .navigationBarBackButtonHidden()
-                    }
-                })
-                .navigationDestination(for: Route.self, destination: { route in
-                    switch route {
-                    case .profile(_):
-                        ProfileView()
-                            .navigationBarBackButtonHidden()
-                    case .ChatView(let user):
-                        ChatView(user: user)
-                            .navigationBarBackButtonHidden()
-                    }
-                    
-                })
-                .navigationDestination(isPresented: $showChat , destination: {
-                    if let user = selectedUser {
-                        ChatView(user: user)
-                            .navigationBarBackButtonHidden()
-                    }
-                })
-                .fullScreenCover(isPresented: $showNewMessageView){
-                    NewMessageView(selectedUser: $selectedUser)
                 }
-                .fullScreenCover(isPresented: $showUpdateProfileInfo, content: {
-                    ProfileUpdateInfoScreen()
-                })
-                .navigationTitle("")
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar(.visible, for: .tabBar)
-                .toolbar{
-                    ToolbarItem(placement: .topBarLeading) {
-                        Text("WhatsApp")
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.blue)
-                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                            HStack(spacing: 24) {
-                              Image(systemName: "camera")
-                              Image(systemName: "magnifyingglass")
-                                
-                                if let user {
-                                    NavigationLink(value: Route.profile(user)) {
-                                    Image(systemName: "ellipsis")
-                                    }
-                                }
-
-                            }
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(.blue)
-                        }
             }
-                Button {
-                    showNewMessageView.toggle()
-                    selectedUser = nil
-                } label: {
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(Color(.darkGray))
-                        .frame(width: 50, height: 50)
-                        .padding()
-                        .overlay {
-                            Image(systemName: "plus.bubble.fill")
-                                .foregroundStyle(.white)
-                        }
+            .listStyle(PlainListStyle())
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.visible, for: .tabBar)
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading) {
+                    Text("WhatsApp")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.blue)
                 }
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack(spacing: 24) {
+                        Image(systemName: "camera")
+                        Image(systemName: "magnifyingglass")
+                    }
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.blue)
+                }
+            }
+            Button {
+                self.isPresentNewMessage.toggle()
+            } label: {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color(.darkGray))
+                    .frame(width: 50, height: 50)
+                    .padding()
+                    .overlay {
+                        Image(systemName: "plus.bubble.fill")
+                            .foregroundStyle(.white)
+                    }
+            }
+        }
+        .fullScreenCover(isPresented: $isPresentNewMessage) {
+            NewMessageView { user in
+                self.router.navigateTo(InboxRouter.Route.chat(user))
             }
         }
     }
@@ -121,7 +87,7 @@ extension View {
 
 struct NavigationBarColorModifier: ViewModifier {
     var backgroundColor: Color
-
+    
     init(backgroundColor: Color) {
         self.backgroundColor = backgroundColor
         let coloredAppearance = UINavigationBarAppearance()
@@ -130,7 +96,7 @@ struct NavigationBarColorModifier: ViewModifier {
         //UINavigationBar.appearance().standardAppearance = coloredAppearance
         //UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
     }
-
+    
     func body(content: Content) -> some View {
         content
             .background(backgroundColor)

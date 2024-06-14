@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct MainTabbarScreen: View {
+struct MainTabbarView: View {
     @State private var selectedTab: Int = 0
     var body: some View {
         TabView {
-            InboxView()
+            InboxRouterView()
                 .tabItem {
                     VStack {
                         Image(systemName: "text.bubble.fill")
@@ -33,18 +33,18 @@ struct MainTabbarScreen: View {
                 .onAppear{
                     selectedTab = 1
                 }
-            CommunityScreen()
-                .tabItem {
-                    VStack {
-                        Image(systemName: "person.3")
-                            .environment(\.symbolVariants,selectedTab == 2 ? .fill : .none)
-                        Text("Communities")
-                    }
+            CommunityRouterView()
+            .tabItem {
+                VStack {
+                    Image(systemName: "person.3")
+                        .environment(\.symbolVariants,selectedTab == 2 ? .fill : .none)
+                    Text("Communities")
                 }
-                .onAppear{
-                    selectedTab = 2
-                }
-            Text("Updates")
+            }
+            .onAppear{
+                selectedTab = 2
+            }
+            UpdatesRouterView()
                 .tabItem {
                     VStack {
                         Image(systemName: "dial.low")
@@ -73,5 +73,5 @@ struct MainTabbarScreen: View {
 }
 
 #Preview {
-    MainTabbarScreen()
+    MainTabbarView()
 }
